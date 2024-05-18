@@ -1,0 +1,28 @@
+{
+  "name": "artisanConnect",
+  "version": "1.0.0",
+  "description": "Final Portfolio Project with ALX and Holberton Schools",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khan2626/artisanConnect.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/khan2626/artisanConnect/issues"
+  },
+  "homepage": "https://github.com/khan2626/artisanConnect#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongodb": "^6.6.2",
+    "mongoose": "^8.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
