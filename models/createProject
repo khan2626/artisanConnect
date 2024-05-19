@@ -1,0 +1,7 @@
+async function createProject(project) {
+  const newProject = new Artisan(project);
+  await newProject.save();
+  console.log('Artisan created successfully:', newProject);
+}
+
+module.exports = { createProject };
