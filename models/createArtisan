@@ -1,7 +1,14 @@
+const { db, Artisan } = require('../utils/db')
+
 async function createArtisan(artisan) {
-  const newArtisan = new Artisan(artisan);
-  await newArtisan.save();
-  console.log('Artisan created successfully:', newArtisan);
+    //Establish connection to the database.
+    await db();
+
+    //Create and save a new artisan
+
+    const newArtisan = new Artisan(artisan);
+    await newArtisan.save();
+    console.log('Artisan created successfully:', newArtisan);
 }
 
 module.exports = { createArtisan };

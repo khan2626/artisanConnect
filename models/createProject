@@ -1,7 +1,13 @@
-async function createProject(project) {
-  const newProject = new Artisan(project);
-  await newProject.save();
-  console.log('Artisan created successfully:', newProject);
+const { db, Project } = require('../utils/db');
+
+async function createProject(user) {
+    // Establish connection to database.
+    await db();
+
+    // Create and save a new project.
+    const newProject = new Project(user);
+    await newProject.save();
+    console.log('Project created successfully:', newProject);
 }
 
 module.exports = { createProject };
