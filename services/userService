@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Artisan = require('../models/artisan');
 
 
 async function createUser(user) {
@@ -7,6 +8,12 @@ async function createUser(user) {
     const newUser = new User(user);
     await newUser.save();
     console.log('User created successfully:', newUser);
+
+    if (newUser.role === 'artisan') {
+        const newArtisan = new Artisan( { userId: newUser._id });
+        await newArtisan.save();
+        console.log('Artisan profile created successfully:', newArtisan);
+    }
 }
 
 module.exports = { createUser };
