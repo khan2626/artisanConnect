@@ -1,0 +1,14 @@
+const Review = require('../models/review');
+const { connectDB } = require('../utils/db');
+
+async function createReview(review) {
+    // establish connection to the database.
+    await connectDB();
+
+    //Create and save a new review.
+    const newReview = new Review(review);
+    await newReview.save();
+    onsole.log('Review created successfully:', newReview);
+}
+
+module.exports = { createReview };

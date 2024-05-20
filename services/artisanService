@@ -1,8 +1,9 @@
-const { db, Artisan } = require('../utils/db')
+const Artisan = require('../models/artisan');
+const { connectDB } = require('../utils/db');
 
 async function createArtisan(artisan) {
     //Establish connection to the database.
-    await db();
+    await connectDB();
 
     //Create and save a new artisan
 

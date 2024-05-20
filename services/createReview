@@ -1,9 +1,0 @@
-const { Review } = require('../utils/db');
-
-async function createReview(review) {
-  const newReview = new Review(review);
-  await newReview.save();
-  console.log('Artisan created successfully:', newUser);
-}
-
-module.exports = { createReview };
