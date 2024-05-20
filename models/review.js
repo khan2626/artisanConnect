@@ -1,5 +1,5 @@
-import { Schema as _Schema, model } from 'mongoose';
-const Schema = _Schema;
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 // Review Schema
 const reviewSchema = new Schema({

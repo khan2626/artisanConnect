@@ -1,5 +1,6 @@
-import { Schema as _Schema, model } from 'mongoose';
-const Schema = _Schema;
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
 // Artisan Schema
 const artisanSchema = new Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },

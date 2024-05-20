@@ -1,10 +1,8 @@
 const User = require('../models/user');
-const { connectDB } = require('../utils/db');
+
 
 async function createUser(user) {
-    // Establish connection to database.
-    await connectDB();
-
+    
     // Create and save a new user.
     const newUser = new User(user);
     await newUser.save();

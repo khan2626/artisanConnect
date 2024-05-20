@@ -1,9 +1,7 @@
 const Project = require('../models/project');
-const { connectDB } = require('../utils/db');
+
 
 async function createProject(project) {
-    // Establish connection to database.
-    await connectDB();
 
     // Create and save a new project.
     const newProject = new Project(project);
