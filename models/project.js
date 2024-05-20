@@ -1,0 +1,19 @@
+import { Schema as _Schema, model } from 'mongoose';
+const Schema = _Schema;
+
+// Project Schema
+const projectSchema = new Schema({
+    customerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    category: String,
+    budget: Number,
+    location: String,
+    status: { type: String, default: 'open' },
+    assignedArtisanId: { type: Schema.Types.ObjectId, ref: 'Artisan' },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+  });
+  
+  const Projects = mongoose.model('Project', projectSchema);
+  

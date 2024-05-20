@@ -1,0 +1,13 @@
+const { db, User } = require('../utils/db');
+
+async function createUser(user) {
+    // Establish connection to database.
+    await db();
+
+    // Create and save a new user.
+    const newUser = new User(user);
+    await newUser.save();
+    console.log('Artisan created successfully:', newUser);
+}
+
+module.exports = { createUser };
