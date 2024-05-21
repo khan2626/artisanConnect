@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 // Project Schema
 const projectSchema = new Schema({
-    customerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
     category: String,
@@ -15,5 +15,5 @@ const projectSchema = new Schema({
     updatedAt: { type: Date, default: Date.now },
   });
   
-  const Projects = mongoose.model('Project', projectSchema);
+  const Project = mongoose.model('Project', projectSchema);
   
