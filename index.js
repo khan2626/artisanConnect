@@ -2,7 +2,11 @@ const express = require('express');
 const { connectDB } =require('./utils/db');
 require('./models/user');
 const userRoute = require('./routes/userRoute');
-const projecRoute = require('./routes/userRoute');
+const projecRoute = require('./routes/projectRoute');
+const getUsers = require('./routes/userRoute');
+const delUser = require('./routes/userRoute');
+const updateUser = require('./routes/userRoute');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,8 +14,10 @@ const PORT = process.env.PORT || 3000;
 connectDB().then(() => {
     app.use(express.json());
     //Define routes here
-    app.use('/register', userRoute);
-    app.use('/projects', projecRoute);
+    app.use('/registerUser', userRoute);
+    app.use('/getProjects', projecRoute);
+    app.use('/delUser', delUser);
+    app.use('/updateUser', updateUser)
 
     app.listen(PORT, () => {
         console.log(`server running on port ${PORT}`)

@@ -23,4 +23,13 @@ router.post('/', async (req, res) => {
 })
 
 
+router.get('/', async (req, res) => {
+    try {
+        const projects = Project.find();
+        res.status(200).json(projects);
+    } catch(error) {
+        res.status(500).json({ message: 'Internal Server Error' });
+    }  
+});
+
 module.exports = router;
