@@ -1,0 +1,18 @@
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "password": "hashedpiuasshjjhh",
+    "email": "artisan@example.com",
+    "role": "customer",
+    "profile": {
+        "name": "James white",
+        "bio": "Experienced carpenter",
+        "location": {
+            "city": "Hong Kong",
+            "address": "gkkkggh"
+        },
+        "contactInfo": "john@example.com"
+        // "profilePictureUrl": "http://example.com/pic.jpg" // Uncomment and provide a valid URL if needed
+    }
+}

@@ -1,19 +1,17 @@
+// services/userService.js
 const User = require('../models/user');
 const Artisan = require('../models/artisan');
 
+const createUser = async (userData) => {
+  const user = new User(userData);
+  await user.save();
+  return user;
+};
 
-async function createUser(user) {
-    
-    // Create and save a new user.
-    const newUser = new User(user);
-    await newUser.save();
-    console.log('User created successfully:', newUser);
+const createArtisan = async (artisanData) => {
+  const artisan = new Artisan(artisanData);
+  await artisan.save();
+  return artisan;
+};
 
-    if (newUser.role === 'artisan') {
-        const newArtisan = new Artisan( { userId: newUser._id });
-        await newArtisan.save();
-        console.log('Artisan profile created successfully:', newArtisan);
-    }
-}
-
-module.exports = { createUser };
+module.exports = { createUser, createArtisan };
