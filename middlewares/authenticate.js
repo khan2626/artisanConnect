@@ -3,7 +3,7 @@ const User = require('../models/user');
 const secret = process.env.SECRET_TOKEN || 'MY_secret';
 
 
-const auth = async ((req, res, next) => {
+const auth = async (req, res, next) => {
     token = req.headers['authorisation'].split(' ')[1];
     if (!token) {
         return res.status(401).json({ message: 'No Token Provide'})
@@ -19,7 +19,6 @@ const auth = async ((req, res, next) => {
     } catch (err) {
         res.satus(401).json({ message: 'Invalid token'});
     }
-    
-})
+};
 
 module.exports = auth;
