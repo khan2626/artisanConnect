@@ -1,35 +1,56 @@
 const express = require('express');
 const User = require('../models/user');
-const { createArtisan, createUser } = ('../services/userService');
 const Artisan = require('../models/artisan');
 
+
+const { createUser } = require('../services/userService');
+const { createArtisan } = require('../services/artisanService.js')
+
+
 const router = express.Router();
+//const JWT_SECRET ="my_very_secret"
 
 router.post('/', async (req, res) => {
   try {
-    const { username, password, email, role, profile, category, skills, portfolio, availability } = req.body;
+    const { password, email, role, profile, category, skills, portfolio, availability } = req.body;
 
     // Create and save the user
-    const user = new User({ username, password, email, role, profile });
-    await user.save();
+    const user = await createUser({ password, email, role, profile });
+    //await user.save();
 
     console.log('user created')
     if (role === 'artisan') {
     // Create and save the artisan profile if the role is artisan
-      const artisan = new Artisan({ 
-        userId: savedUser._id, 
+      const artisan = await createArtisan({ 
+        userId: user._id, 
         category, 
         skills, 
         portfolio, 
         availability 
       });
+ 
     }
-
+    
     return res.status(201).send({ message: 'User registered successfully' });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
 });
+
+/** 
+//login route
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body
+    const user = await User.findOne({ email });
+
+    if (!user || !(await user.comparePassword(password))) {
+        res.status(401).json({ messaged: 'Incorrect Email or Password'})
+    }
+
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '5h' });
+    res.status(200).json( { token });
+})
+*/
 
 // Read a single user by ID
 router.get('/', async (req, res) => {

@@ -1,9 +1,11 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+
+
 const secret = process.env.SECRET_TOKEN || 'MY_secret';
 
 
-const auth = async (req, res, next) => {
+const authenticate = async (req, res, next) => {
     token = req.headers['authorisation'].split(' ')[1];
     if (!token) {
         return res.status(401).json({ message: 'No Token Provide'})
@@ -11,7 +13,7 @@ const auth = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, secret);
-        req.user = await User.findById(decode.userId);
+        req.user = await User.findById(decoded.userId);
         if (!req.user) {
             return res.satus(401).json({ message: 'User not found' });
         }
@@ -21,4 +23,4 @@ const auth = async (req, res, next) => {
     }
 };
 
-module.exports = auth;
+module.exports = authenticate;

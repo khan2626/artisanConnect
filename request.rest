@@ -1,18 +1,13 @@
-POST http://localhost:3000/login
+POST http://localhost:4000/users
 Content-Type: application/json
 
 {
-    "password": "hashedpiuasshjjhh",
-    "email": "artisan@example.com",
-    "role": "customer",
-    "profile": {
-        "name": "James white",
-        "bio": "Experienced carpenter",
-        "location": {
-            "city": "Hong Kong",
-            "address": "gkkkggh"
-        },
-        "contactInfo": "john@example.com"
-        // "profilePictureUrl": "http://example.com/pic.jpg" // Uncomment and provide a valid URL if needed
-    }
+  "password": "hashedpasswordeee",
+  "email": "artisan@example.com",
+  "role": "customer",
+  "profile": {
+    "name": "John mark",
+    "bio": "Experienced carpenter",
+    "location": { "city": "Hong Kong", "address": "gkkkggh" }
+  }
 }

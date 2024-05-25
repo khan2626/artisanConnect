@@ -38,9 +38,9 @@ const userSchema = new Schema({
 
 
   //Compare password method
-  userSchema.methods.comparePassword = function (userPassword) {
-    return bcrypt.compare(userPassword, this.password);
+  userSchema.methods.comparePassword = function (inputedPassword) {
+    return bcrypt.compare(inputedPassword, this.password);
   };
-  
+
   const User = mongoose.model('User', userSchema);
   module.exports = User;

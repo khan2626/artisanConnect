@@ -32,4 +32,31 @@ router.get('/', async (req, res) => {
     }  
 });
 
+// Update a project 
+router.put('/update', async (req, res) => {
+    try {
+        const updatedProject = await Project.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true });
+        if (!updatedProject) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        res.status(200).json(updatedProject);
+    } catch (error) {
+        console.error(`Error: ${error.message}`);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+
+router.delete('/delete', async (req, res) => {
+    try {
+        const user = await Project.findByIdAndDelete(req.user._id);
+        if (!user) {
+            res.status(404).json({ Error: 'Not Found'})
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error' });
+    }
+})
+
 module.exports = router;
