@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const Artisan = require('../models/artisan');
+const authenticate = require('../middlewares/authenticate');
 
 
 const { createUser } = require('../services/userService');
@@ -8,7 +9,7 @@ const { createArtisan } = require('../services/artisanService.js')
 
 
 const router = express.Router();
-//const JWT_SECRET ="my_very_secret"
+
 
 router.post('/', async (req, res) => {
   try {
@@ -16,7 +17,6 @@ router.post('/', async (req, res) => {
 
     // Create and save the user
     const user = await createUser({ password, email, role, profile });
-    //await user.save();
 
     console.log('user created')
     if (role === 'artisan') {
@@ -37,23 +37,10 @@ router.post('/', async (req, res) => {
   }
 });
 
-/** 
-//login route
-router.post('/login', async (req, res) => {
-    const { email, password } = req.body
-    const user = await User.findOne({ email });
 
-    if (!user || !(await user.comparePassword(password))) {
-        res.status(401).json({ messaged: 'Incorrect Email or Password'})
-    }
-
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '5h' });
-    res.status(200).json( { token });
-})
-*/
 
 // Read a single user by ID
-router.get('/', async (req, res) => {
+router.get('/', authenticate, async (req, res) => {
     try {
         const user = await User.find();
         if (!user) {

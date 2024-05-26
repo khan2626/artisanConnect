@@ -1,13 +1,13 @@
-POST http://localhost:4000/users
+POST http://localhost:4000/auth
 Content-Type: application/json
 
 {
-  "password": "hashedpasswordeee",
-  "email": "artisan@example.com",
-  "role": "customer",
-  "profile": {
-    "name": "John mark",
-    "bio": "Experienced carpenter",
-    "location": { "city": "Hong Kong", "address": "gkkkggh" }
-  }
+  "email": "testing@example.com",
+  "password": "hashedp"
 }
+
+
+###
+
+GET http://localhost:4000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjUyMzc4OWVmZTVmMjJkYTYxMmQ5MzEiLCJpYXQiOjE3MTY2OTYwMjUsImV4cCI6MTcxNjY5OTYyNX0.CmOklS54h4IbugLzVjQhU6tGf3LLePABXQrBUdLTMAw

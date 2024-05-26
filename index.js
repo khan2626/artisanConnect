@@ -2,7 +2,8 @@ const express = require('express');
 const { connectDB } =require('./utils/db');
 const userRoute = require('./routes/userRoute');
 const projecRoute = require('./routes/projectRoute');
-
+const authRoute = require('./routes/authRoute');
+const authenticate = require('./middlewares/authenticate');
 
 
 const app = express();
@@ -13,6 +14,7 @@ connectDB().then(() => {
     //Define routes here
     app.use('/users', userRoute);
     app.use('/Projects', projecRoute);
+    app.use('/auth', authRoute);
     
 
     app.listen(PORT, () => {
