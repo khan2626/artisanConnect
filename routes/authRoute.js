@@ -1,12 +1,14 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user')
+const User = require('../models/user');
+const RefreshToken = require('../models/refreshToken');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 
-const secret = 'my_secret'
+const accessSecret = 'my_secret'
+const refreshSeret = 'my_refresh_secret'
 
-router.post('/', async (req, res) => {
+router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
@@ -19,8 +21,15 @@ router.post('/', async (req, res) => {
         if (!isMatch) {
             return res.status(401).json({ message: 'Incorrect password' });
         }
-        const token = jwt.sign({ userId: user._id }, secret, { expiresIn: '1hr'} );
-        res.status(200).json(token)
+        const accessToken = jwt.sign({ userId: user._id }, refreshSeret, { expiresIn: '15m'} );
+        res.status(200).json(accessToken)
+
+        const refreshToken = jwt.sign({ userId: user._id }, accessSecret, { expiresIn: '14d'} );
+        //save the refresh token to the database
+        await new RefreshToken({ token: refreshToken, userId: user._id }).save();
+
+        res.cookie('refreshToken', 'refreshToken', { httpOnly: true, secure: true } );
+        res.status(200).json(accessToken);
 
     } catch (error) {
         res.status(500).json({ message: error.message})
