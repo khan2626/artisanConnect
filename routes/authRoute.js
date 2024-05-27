@@ -59,4 +59,15 @@ router.post('/refresh-token', async (req, res) => {
     }
 });
 
+router.post('/logout', async (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (refreshToken) {
+        await RefreshToken.findOneAndDelete({ token: refreshToken});
+        res.clearCookie('refreshToken');
+    }
+
+    res.status(200).json({ message: 'Logeed out successfully!' });
+});
+
 module.exports = router
