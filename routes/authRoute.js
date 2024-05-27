@@ -5,8 +5,9 @@ const RefreshToken = require('../models/refreshToken');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 
-const accessSecret = 'my_secret';
-const refreshSeret = 'my_refresh_secret';
+
+const accessSecret = process.env.ACCESS_SECRET_TOKEN || 'my_secret';
+const refreshSeret = process.env.REFRESH_SECRET_TOKEN || 'my_refresh_secret';
 
 router.post('/login', async (req, res) => {
     try {
@@ -22,7 +23,6 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Incorrect password' });
         }
         const accessToken = jwt.sign({ userId: user._id }, accessSecret, { expiresIn: '15m'} );
-        res.status(200).json(accessToken)
 
         const refreshToken = jwt.sign({ userId: user._id }, refreshSeret, { expiresIn: '14d'} );
         //save the refresh token to the database
@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
         res.status(200).json(accessToken);
 
     } catch (error) {
-        res.status(500).json({ message: error.message})
+        res.status(500).json({ message: error.message })
     }
 });
 
@@ -41,7 +41,7 @@ router.post('/refresh-token', async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
-        res.status(401).json(message: 'No refresh token provided');
+        res.status(401).json({ message: 'No refresh token provided' });
     }
 
     try {
@@ -54,6 +54,7 @@ router.post('/refresh-token', async (req, res) => {
 
         const accessToken = jwt.sign({ userId: decoded.userId }, accessSecret, { expiresIn: '15m'});
         res.status(200).json(accessToken);
+
     } catch(error) {
         res.status(401).json(error.message);
     }

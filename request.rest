@@ -1,13 +1,28 @@
-POST http://localhost:4000/auth
-Content-Type: application/json
+POST http://localhost:4000/auth/logout
 
-{
-  "email": "testing@example.com",
-  "password": "hashedp"
-}
+
 
 
 ###
 
 GET http://localhost:4000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjUyMzc4OWVmZTVmMjJkYTYxMmQ5MzEiLCJpYXQiOjE3MTY2OTYwMjUsImV4cCI6MTcxNjY5OTYyNX0.CmOklS54h4IbugLzVjQhU6tGf3LLePABXQrBUdLTMAw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjUzZTBiMmU5NTExMTMzODhjMGMwZmQiLCJpYXQiOjE3MTY3NzQ4OTMsImV4cCI6MTcxNjc3NTc5M30.xIxi9icBucGu-3Ul5Qx9hZJKuhFAR8syMmO6X_xmj6A
+
+###
+
+POST http://localhost:4000/users
+Content-Type: application/json
+
+
+{
+  "password": "hashedpiuasshjjhh",
+  "email": "customer@example.com",
+  "role": "customer",
+  "profile": {
+          "name": "FISH HEAD",
+          "bio": "Experienced carpenter",
+          "location": { "city": "Hong Kong", "address": "gkkkggh" }
+  }
+}
+
+        
