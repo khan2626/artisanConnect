@@ -9,11 +9,15 @@ const projectSchema = new Schema({
     category: String,
     budget: Number,
     location: String,
-    status: { type: String, default: 'open' },
+    status: { type: String,
+    required: true,
+    enum: [ "open", "done" ] },
     assignedArtisanId: { type: Schema.Types.ObjectId, ref: 'Artisan' },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   });
   
   const Project = mongoose.model('Project', projectSchema);
+
+  module.exports = Project;
   
