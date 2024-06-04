@@ -1,5 +1,6 @@
 import React from "react";
 import logoImg from "./images/logo.png";
+
 export default function Header() {
   return (
     <header className="bg-gradient-to-t from-[#fbc2eb] to-[#a6c1ee] h-screen">
