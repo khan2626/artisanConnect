@@ -11,18 +11,15 @@ const userSchema = new Schema({
     required: true,
     enum: ["artisan", "customer"],
   },
-  profile: {
-    name: String,
-    bio: String,
-    location: {
-      city: String,
-      address: String,
-    },
-    profilePicture: {
-      data: Buffer,
-      contentType: String,
-    },
-  },
+
+  name: { type: String, required: true },
+  bio: { type: String, required: true },
+
+  city: { type: String, required: true },
+  address: { type: String, required: true },
+
+  profilePicture: String,
+
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

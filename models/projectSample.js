@@ -8,19 +8,18 @@ const projectSampleSchema = new Schema({
   image: { type: String, required: true },
   city: String,
   address: String,
-  assignedArtisanId: { type: Schema.Types.ObjectId, ref: "Artisan" },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
 
-const commentSchema = new Schema({
-  projectId: { type: Schema.Types.ObjectId, ref: "Project", required: true },
-  text: { type: String, required: true },
-  author: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-});
+// const commentSchema = new Schema({
+//   projectId: { type: Schema.Types.ObjectId, ref: "Project", required: true },
+//   text: { type: String, required: true },
+//   author: { type: String, required: true },
+//   createdAt: { type: Date, default: Date.now },
+// });
 
 const Project = mongoose.model("Project", projectSchema);
-const Comment = mongoose.model("Comment", commentSchema);
+// const Comment = mongoose.model("Comment", commentSchema);
 
-module.exports = { ProjectSample, Comment };
+module.exports = ProjectSample;
