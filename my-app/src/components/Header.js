@@ -8,24 +8,24 @@ export default function Header() {
         <div>
           <img className="w-16" src={logoImg} alt="..."></img>
           <h1>
-            <a className="hover:text-gray-500" href="#">
+            <a className="hover:text-gray-500" href="Artisan Connect">
               Artisan Connect
             </a>
           </h1>
         </div>
         <ul className="flex items-center gap-[4vw]">
           <li>
-            <a className="hover:text-gray-500" href="#">
-              Home
+            <a className="hover:text-gray-500" href="/Project Samples">
+              Project Samples
             </a>
           </li>
           <li>
-            <a className="hover:text-gray-500" href="#">
-              Projects
+            <a className="hover:text-gray-500" href="/Open Projects">
+              Open Projects
             </a>
           </li>
           <li>
-            <a className="hover:text-gray-500" href="#">
+            <a className="hover:text-gray-500" href="/me">
               me
             </a>
           </li>

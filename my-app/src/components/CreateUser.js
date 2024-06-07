@@ -1,51 +1,66 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import React from "react";
+import axios from "axios";
 
 export default function CreateUser(props) {
   const initialFormData = {
     password: "",
     email: "",
     role: "artisan",
-    profile: {
-      name: "",
-      bio: "",
-      location: {
-        city: "",
-        address: "",
-      },
-      profilePicture: "",
-    },
+    name: "",
+    bio: "",
+    city: "",
+    address: "",
+    profilePicture: null,
   };
 
   const [formData, setFormData] = useState(initialFormData);
+  const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const keys = name.split(".");
-    if (keys.length === 1) {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
-      }));
-    } else {
-      setFormData((prevFormData) => {
-        const updatedFormData = { ...prevFormData };
-        let pointer = updatedFormData;
-        for (let i = 0; i < keys.length - 1; i++) {
-          pointer = pointer[keys[i]];
-        }
-        pointer[keys[keys.length - 1]] = value;
-        return updatedFormData;
-      });
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      profilePicture: e.target.files[0],
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission
+    const formDataToSend = new FormData();
+    Object.keys(formData).forEach((key) => {
+      formDataToSend.append(key, formData[key]);
+    });
     console.log("Form Data:", formData);
     props.createUserHandler(formData);
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:4000/users/register",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+
     setFormData(initialFormData);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null;
+    }
   };
 
   return (
@@ -107,16 +122,16 @@ export default function CreateUser(props) {
         </div>
         <div className="mb-4">
           <label
-            htmlFor="profile.name"
+            htmlFor="name"
             className="block text-sm font-medium text-gray-700"
           >
             Name
           </label>
           <input
             type="text"
-            name="profile.name"
-            id="profile.name"
-            value={formData.profile.name}
+            name="name"
+            id="name"
+            value={formData.name}
             onChange={handleChange}
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required
@@ -124,15 +139,15 @@ export default function CreateUser(props) {
         </div>
         <div className="mb-4">
           <label
-            htmlFor="profile.bio"
+            htmlFor="bio"
             className="block text-sm font-medium text-gray-700"
           >
             Bio
           </label>
           <textarea
-            name="profile.bio"
-            id="profile.bio"
-            value={formData.profile.bio}
+            name="bio"
+            id="bio"
+            value={formData.bio}
             onChange={handleChange}
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required
@@ -140,16 +155,16 @@ export default function CreateUser(props) {
         </div>
         <div className="mb-4">
           <label
-            htmlFor="profile.location.city"
+            htmlFor="city"
             className="block text-sm font-medium text-gray-700"
           >
             City
           </label>
           <input
             type="text"
-            name="profile.location.city"
-            id="profile.location.city"
-            value={formData.profile.location.city}
+            name="city"
+            id="city"
+            value={formData.city}
             onChange={handleChange}
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required
@@ -157,16 +172,16 @@ export default function CreateUser(props) {
         </div>
         <div className="mb-4">
           <label
-            htmlFor="profile.location.address"
+            htmlFor="address"
             className="block text-sm font-medium text-gray-700"
           >
             Address
           </label>
           <input
             type="text"
-            name="profile.location.address"
-            id="profile.location.address"
-            value={formData.profile.location.address}
+            name="address"
+            id="address"
+            value={formData.address}
             onChange={handleChange}
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required
@@ -174,19 +189,18 @@ export default function CreateUser(props) {
         </div>
         <div className="mb-4">
           <label
-            htmlFor="profile.profilePicture"
+            htmlFor="profilePicture"
             className="block text-sm font-medium text-gray-700"
           >
-            Profile Picture URL
+            Profile Picture
           </label>
           <input
-            type="text"
-            name="profile.profilePicture"
-            id="profile.profilePicture"
-            value={formData.profile.profilePicture}
-            onChange={handleChange}
-            className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            required
+            type="file"
+            name="profilePicture"
+            id="profilePicture"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
           />
         </div>
         <button
