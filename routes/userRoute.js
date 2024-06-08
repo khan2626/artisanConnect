@@ -44,11 +44,12 @@ router.post("/register", upload.single("profilePicture"), async (req, res) => {
 // Read a single user by ID
 router.get("/me/:userId", authenticate, async (req, res) => {
   try {
-    const users = await User.findById(userId);
+    const { userId } = req.params;
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.status(200).json(users);
+    res.status(200).json(user);
   } catch (error) {
     console.error(`Error: ${error.message}`);
     res.status(500).json({ message: error.message });
