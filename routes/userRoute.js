@@ -1,91 +1,97 @@
-const express = require('express');
-const User = require('../models/user');
-const Artisan = require('../models/artisan');
-const authenticate = require('../middlewares/authenticate');
-
-
-const { createUser } = require('../services/userService');
-const { createArtisan } = require('../services/artisanService.js')
-
+const express = require("express");
+const User = require("../models/user");
+const authenticate = require("../middlewares/authenticate");
+const multer = require("multer");
 
 const router = express.Router();
 
+//configure multer for file upload
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "../artisanConnect/my-app/src/components/uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
 
-router.post('/', async (req, res) => {
+router.post("/register", upload.single("profilePicture"), async (req, res) => {
   try {
-    const { password, email, role, profile, category, skills, portfolio, availability } = req.body;
+    const { password, email, role, name, bio, city, address } = req.body;
+    const profilePicture = req.file.filename;
 
     // Create and save the user
-    const user = await createUser({ password, email, role, profile });
+    const user = new User({
+      password,
+      email,
+      role,
+      name,
+      bio,
+      city,
+      address,
+      profilePicture,
+    });
 
-    console.log('user created')
-    if (role === 'artisan') {
-    // Create and save the artisan profile if the role is artisan
-      const artisan = await createArtisan({ 
-        userId: user._id, 
-        category, 
-        skills, 
-        portfolio, 
-        availability 
-      });
- 
-    }
-    
-    return res.status(201).send({ message: 'User registered successfully' });
+    await user.save();
+
+    res.status(201).send({ message: "User registered successfully" });
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({ message: error.message });
   }
 });
 
-
-
 // Read a single user by ID
-router.get('/', authenticate, async (req, res) => {
-    try {
-        const user = await User.find();
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        res.status(200).json(user);
-    } catch (error) {
-        console.error(`Error: ${error.message}`);
-        res.status(500).json({ message: 'Internal server error' });
+router.get("/me/:userId", authenticate, async (req, res) => {
+  try {
+    const users = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    res.status(500).json({ message: error.message });
+  }
 });
 
 // Update a user by ID
-router.put('/me', async (req, res) => {
-    try {
-        const { username, password, email, role, profile } = req.body;
-        const user = await User.findByIdAndUpdate(
-            req.user._id,
-            { username, password, email, role, profile, updatedAt: Date.now() },
-            { new: true, runValidators: true }
-        );
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        res.status(200).json(user);
-    } catch (error) {
-        console.error(`Error: ${error.message}`);
-        res.status(500).json({ message: 'Internal server error' });
+router.put("/:userId", authenticate, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    console.log(`User ID: ${userId}`);
+    console.log(`Request Body: ${JSON.stringify(req.body)}`);
+
+    const user = await User.findOneAndUpdate({ _id: userId }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    console.log(`Updated User: ${JSON.stringify(user)}`);
+    res.status(200).json("User updated Successfully");
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    res.status(500).json({ message: error.message });
+  }
 });
 
 // Delete a user by ID
-router.delete('/:id', async (req, res) => {
-    try {
-        userId = User._id;
-        const user = await User.findByIdAndDelete(userId);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        res.status(200).json({ message: 'User deleted successfully' });
-    } catch (error) {
-        console.error(`Error: ${error.message}`);
-        res.status(500).json({ message: 'Internal server error' });
+router.delete("/:userId", authenticate, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    res.status(500).json({ message: error.message });
+  }
 });
-
 
 module.exports = router;
