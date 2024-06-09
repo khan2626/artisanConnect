@@ -1,22 +1,25 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const RefreshToken = require("../models/refreshToken");
+const refreshToken = require("../models/refreshToken");
 
 const accessSecret = process.env.SECRET_TOKEN || "my_secret";
 const refreshSecret = process.env.REFRESH_TOKEN_SECRET || "MY_refresh_secret";
 
 const authenticate = async (req, res, next) => {
-  const token = req.cookies.accessToken;
+  let token = req.cookies.accessToken;
 
   if (!token) {
-    if (renewToken(req, res)) {
-      next();
+    const renewed = await renewToken(req, res);
+    if (renewed) {
+      token = req.cookies.accessToken;
+    } else {
+      return; // renewToken already sends the response
     }
-    //return res.status(401).json({ message: "No Token Provided" });
   }
+
   try {
     const decoded = jwt.verify(token, accessSecret);
-    const user = await User.findById(decoded._id);
+    const user = await User.findById(decoded.userId);
     if (!user) {
       return res.status(401).json({ message: "User not found" });
     }
@@ -28,32 +31,36 @@ const authenticate = async (req, res, next) => {
 };
 
 const renewToken = async (req, res) => {
-  const refreshToken = req.cookies.RefreshToken;
-  const exist = false;
+  const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
-    return res.status(401).json({ message: "No Token Provided" });
+    res.status(401).json({ message: "No refresh token provided" });
+    return false;
   }
+
   try {
     const decoded = jwt.verify(refreshToken, refreshSecret);
-    const user = await User.findById(decoded._id);
+    const user = await User.findById(decoded.userId);
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      res.status(401).json({ message: "User not found" });
+      return false;
     }
-    const accessToken = jwt.sign({ userId: user._id }, accessSecret, {
+
+    const newAccessToken = jwt.sign({ userId: user._id }, accessSecret, {
       expiresIn: "7m",
     });
-    res.cookie("accessToken", accessToken, {
+
+    res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "None",
-      partitioned: true,
-      maxAge: 60000,
+      maxAge: 60000, // 1 minute
     });
-    exist = true;
-    return exist;
+
+    return true;
   } catch (err) {
     res.status(401).json({ message: err.message });
+    return false;
   }
 };
 
