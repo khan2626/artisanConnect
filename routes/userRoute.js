@@ -8,7 +8,7 @@ const router = express.Router();
 //configure multer for file upload
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "../artisanConnect/my-app/src/components/uploads");
+    cb(null, "/home/khan/artisanConnect/routes/uploads");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
@@ -41,15 +41,25 @@ router.post("/register", upload.single("profilePicture"), async (req, res) => {
   }
 });
 
-// Read a single user by ID
 router.get("/me/:userId", authenticate, async (req, res) => {
   try {
     const { userId } = req.params;
-    const user = await User.findById(userId);
-    if (!user) {
+    const users = await User.find({ _id: userId });
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Read a single user by ID
+router.get("/", authenticate, async (req, res) => {
+  try {
+    const user = await User.find({});
+    if (user.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
     res.status(200).json(user);
+    console.log(user);
   } catch (error) {
     console.error(`Error: ${error.message}`);
     res.status(500).json({ message: error.message });
@@ -57,7 +67,7 @@ router.get("/me/:userId", authenticate, async (req, res) => {
 });
 
 // Update a user by ID
-router.put("/:userId", authenticate, async (req, res) => {
+router.put("/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     console.log(`User ID: ${userId}`);
@@ -83,7 +93,7 @@ router.put("/:userId", authenticate, async (req, res) => {
 // Delete a user by ID
 router.delete("/:userId", authenticate, async (req, res) => {
   try {
-    const { userId } = req.params;
+    const { userId } = req.user._id;
     const user = await User.findByIdAndDelete(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });

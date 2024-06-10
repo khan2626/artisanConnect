@@ -15,30 +15,36 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.post("/", upload.single("projectImage"), async (req, res) => {
-  try {
-    const { title, category, budget, location, status } = req.body;
-    const image = req.file;
+router.post(
+  "/",
+  authenticate,
+  upload.single("projectImage"),
+  async (req, res) => {
+    try {
+      const { title, category, budget, location, status } = req.body;
+      const image = req.file.filename;
 
-    const newProject = await createProject({
-      title,
-      image,
-      category,
-      budget,
-      location,
-      status,
-    });
+      const newProject = await createProject({
+        title,
+        image,
+        category,
+        budget,
+        location,
+        status,
+      });
 
-    //await newProject.save();
-    res
-      .status(201)
-      .json({ message: "Project created successfullly", project: newProject });
-  } catch (error) {
-    res.status(500).json({ Error: error.message });
+      //await newProject.save();
+      res.status(201).json({
+        message: "Project created successfullly",
+        project: newProject,
+      });
+    } catch (error) {
+      res.status(500).json({ Error: error.message });
+    }
   }
-});
+);
 
-router.get("/", authenticate, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const projects = await Project.find({}).sort({ createdAt: -1 });
     res.status(200).json(projects);
@@ -48,7 +54,7 @@ router.get("/", authenticate, async (req, res) => {
 });
 
 // Update a project
-router.put("/:projectId", authenticate, async (req, res) => {
+router.put("/:projectId", async (req, res) => {
   try {
     const { projectId } = req.params;
     const updatedProject = await Project.findByIdAndUpdate(
@@ -66,7 +72,7 @@ router.put("/:projectId", authenticate, async (req, res) => {
   }
 });
 
-router.delete("/:projectId", authenticate, async (req, res) => {
+router.delete("/:projectId", async (req, res) => {
   try {
     const { projectId } = req.params;
     const project = await Project.findByIdAndDelete(projectId);
