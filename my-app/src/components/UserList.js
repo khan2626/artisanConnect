@@ -2,28 +2,24 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import UserItem from "./UserItem";
 import EditUser from "./EditUser";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
 
-  const { userId } = useParams();
-
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          `http://127.0.0.1:4000/users/me/${userId}`
-        );
+        const response = await axios.get("http://127.0.0.1:4000/users");
         setUsers(response.data);
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchUser();
-  }, [userId]);
+    fetchUsers();
+  }, []);
 
   const handleDelete = async (userId) => {
     try {

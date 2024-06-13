@@ -8,11 +8,12 @@ export default function Login() {
   const [error, setError] = useState("");
   //const navigate = useNavigate();
 
+  axios.defaults.withCredentials = true;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      axios.defaults.withCredentials = true;
-      const response = await axios.post("http://127.0.0.1:4000/auth/login", {
+      const response = await axios.post("http://localhost:4000/auth/login", {
         email,
         password,
       });
