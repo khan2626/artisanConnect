@@ -8,7 +8,7 @@ import CreateProject from "./CreateProject";
 import Login from "./Login";
 import ListProjects from "./ListProjects";
 import axios from "axios";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
   const createUserHandler = (userData) => {
